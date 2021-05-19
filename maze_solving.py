@@ -23,7 +23,7 @@ def form(i,j,bnw,c,a,b,a1,b1):
          a1=0
      if (b1<=0):
          b1=0
-     if (i>=135& j>=404):#it denotes that the puzzle is solved
+     if (i>=153):#it denotes that the puzzle is solved
          return 1
      if(validity((i-1),j,bnw)==1):#traverse up
          bnw[i-1][j]=255
