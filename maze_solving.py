@@ -56,6 +56,5 @@ def form(i,j,bnw,c,a,b,a1,b1):
          b[a1]=0
          return form(a[a1-1],b[b1-1],bnw,c,a,b,a1-1,b1-1)
 j=form(149,3,bnw,c,a,b,a1,b1)
-
 cv2.imshow("c",c)
 cv2.waitKey(0)
