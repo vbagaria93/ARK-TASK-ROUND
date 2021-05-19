@@ -1,9 +1,10 @@
+#446*160
 import numpy as np
 from cv2 import cv2 as cv2
 original = cv2.cvtColor(cv2.imread('MAZE_D.png'), cv2.COLOR_BGR2GRAY)#blackandwhitepixels
 og = cv2.imread('MAZE_D.png')#coloured pixels
-stack1 = []  # width
-stack2 = []  # height
+stack1 = []# width
+stack2 = []# height
 marked = np.zeros((original.shape[1], original.shape[0]), dtype='uint8')
 def dept(img, a):  # image and a list of the current coordinates
     global og
@@ -14,13 +15,13 @@ def dept(img, a):  # image and a list of the current coordinates
     stack1.append(a[1])
     stack2.append(a[0])
     og[a[1], a[0]] = [155, 132, 178]#to show that ive traversed via this
-    if  a[0] > 138:  # terminating condition
+    if a[1] > 410 and a[0] > 138:  # terminating condition
         return 1
     p = visit(img, [a[0], a[1]], marked)
     for i in range(1, 5):
         if i != p:
             continue
-        if p == 1:
+        if p == 1 :
             r = dept(img, [a[0] - 1,a[1]])
         elif p == 2:
             r = dept(img, [a[0] , a[1]+1])
