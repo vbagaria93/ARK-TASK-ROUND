@@ -76,9 +76,3 @@ cv2.destroyAllWindows() # Destroys all the windows created by imshow
 
 
 
-if (i +30) > x : 
-           i=x
-           velox=-velox
-         if (j+30)>y:  
-             j=y
-             veloy=-veloy
