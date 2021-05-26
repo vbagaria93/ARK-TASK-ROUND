@@ -237,4 +237,4 @@ if __name__ == '__main__':
     sim = Simulation(nparticles, radii, styles)
     sim.do_animation(save=False)
 while True:
-    ret,xyg=captue.read()
+    ret,xyg=capture.read()
