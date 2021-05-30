@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from matplotlib import animation
 from itertools import combinations
-
 class Particle:
     """A class representing a two-dimensional particle."""
 

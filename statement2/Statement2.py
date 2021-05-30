@@ -21,7 +21,7 @@ while True:
      img_tomask=np.zeros(img.shape[:2],dtype='uint8')
      gray=cv2.flip(gray,1)
      cv2.circle(img_tomask,(i,j),30,(235,206,135),thickness=cv2.FILLED)
-     faces=face_d.detectMultiScale(gray,1.1,6,minSize=(20,20))
+     faces=face_d.detectMultiScale(gray,1.1,6,minSize=(20,20),flags=cv2.FONT_HERSHEY_SIMPLEX)
      for (x,y,w,h) in faces:
          #e=rescale(gray[y:y+h,x:x+w],.5)
          img_tomask[y:y+h,x:x+w]=gray[y:y+h,x:x+w]
