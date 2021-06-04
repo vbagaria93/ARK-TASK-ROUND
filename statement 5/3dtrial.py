@@ -26,7 +26,7 @@ model_2.add(Dense(units=60, activation='relu', kernel_initializer='random_unifor
 model_2.add(Dense(9, kernel_initializer='random_uniform', bias_initializer='zeros'))
 model_2.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
 
-def one_hot(state):
+def ohencode(state):
 	current_state = []
 
 	for square in state:
@@ -46,42 +46,42 @@ def one_hot(state):
 	return current_state
 
 def get_outcome(state):
-	total_reward = 0
+	rewcalc = 0
 
 	for i in range(0, 9):
 		if i == 0 or i == 3 or i == 6:
 			if state[i] == state[i + 1] and state[i] == state[i + 2]:
-				total_reward = state[i]					
+				rewcalc = state[i]					
 				break
 			elif state[0] == state[4] and state[0] == state[8] and i == 0:
-				total_reward = state[0]
+				rewcalc = state[0]
 				break
 		if i < 3:
 			if state[i] == state[i + 3] and state[i] == state[i + 6]:
-				total_reward = state[i]					
+				rewcalc = state[i]					
 				break
 			elif state[2] == state[4] and state[2] == state[6] and i == 2:
-				total_reward = state[2]
+				rewcalc = state[2]
 				break
 
 	if (state[0] == state[1] == state[2]) and not state[0] == 0:
-		total_reward = state[0]	
+		rewcalc = state[0]	
 	elif (state[3] == state[4] == state[5]) and not state[3] == 0:
-		total_reward = state[3]	
+		rewcalc = state[3]	
 	elif (state[6] == state[7] == state[8]) and not state[6] == 0:
-		total_reward = state[6]	
+		rewcalc = state[6]	
 	elif (state[0] == state[3] == state[6]) and not state[0] == 0:
-		total_reward = state[0]	
+		rewcalc = state[0]	
 	elif (state[1] == state[4] == state[7]) and not state[1] == 0:
-		total_reward = state[1]	
+		rewcalc = state[1]	
 	elif (state[2] == state[5] == state[8]) and not state[2] == 0:
-		total_reward = state[2]	
+		rewcalc = state[2]	
 	elif (state[0] == state[4] == state[8]) and not state[0] == 0:
-		total_reward = state[0]	
+		rewcalc = state[0]	
 	elif (state[2] == state[4] == state[6]) and not state[2] == 0:
-		total_reward = state[2]
+		rewcalc = state[2]
 
-	return total_reward
+	return rewcalc
 
 try:
 	model = load_model('tic_tac_toe.h5')
@@ -90,78 +90,72 @@ try:
 except:
 	pass
 
-def process_games(games, model, model_2):
+def trainers(games, model, model_2):
 	global x_train
 	xt = 0
 	ot = 0
 	dt = 0
-	states = []
+	states_possible = []
 	q_values = []
-	states_2 = []
-	q_values_2 = []
+	statenext = []
+	qval2 = []
 
 	for game in games:
-		total_reward = get_outcome(game[len(game) - 1])
-		if total_reward == -1:
+		rewcalc = get_outcome(game[len(game) - 1])
+		if rewcalc == -1:
 			ot += 1
-		elif total_reward == 1:
+		elif rewcalc == 1:
 			xt += 1
 		else:
 			dt += 1
-		# print('------------------')
-		# print(game[len(game) - 1][0], game[len(game) - 1][1], game[len(game) - 1][2])
-		# print(game[len(game) - 1][3], game[len(game) - 1][4], game[len(game) - 1][5])
-		# print(game[len(game) - 1][6], game[len(game) - 1][7], game[len(game) - 1][8])
-		# print('reward =', total_reward)
+
+		# print('reward =', rewcalc)
 
 		for i in range(0, len(game) - 1):
 			if i % 2 == 0:
 				for j in range(0, 9):
 					if not game[i][j] == game[i + 1][j]:
 						reward_vector = np.zeros(9)
-						reward_vector[j] = total_reward*(reward_dep**(math.floor((len(game) - i) / 2) - 1))
+						reward_vector[j] = rewcalc*(reward_dep**(math.floor((len(game) - i) / 2) - 1))
 						# print(reward_vector)
-						states.append(game[i].copy())
+						states_possible.append(game[i].copy())
 						q_values.append(reward_vector.copy())
 			else:
 				for j in range(0, 9):
 					if not game[i][j] == game[i + 1][j]:
 						reward_vector = np.zeros(9)
-						reward_vector[j] = -1*total_reward*(reward_dep**(math.floor((len(game) - i) / 2) - 1))
+						reward_vector[j] = -1*rewcalc*(reward_dep**(math.floor((len(game) - i) / 2) - 1))
 						# print(reward_vector)
-						states_2.append(game[i].copy())
-						q_values_2.append(reward_vector.copy())
+						statenext.append(game[i].copy())
+						qval2.append(reward_vector.copy())
 
 	if x_train:
-		zipped = list(zip(states, q_values))
-		random.shuffle(zipped)
-		states, q_values = zip(*zipped)
-		new_states = []
-		for state in states:
-			new_states.append(one_hot(state))
+		zip_ = list(zip(states_possible, q_values))
+		random.shuffle(zip_)
+		states_possible, q_values = zip(*zip_)
+		new_states_possible = []
+		for state in states_possible:
+			new_states_possible.append(ohencode(state))
 
-		# for i in range(0, len(states)):
-			# print(new_states[i], states[i], q_values[i])
-			# print(np.asarray(new_states))
 
-		model.fit(np.asarray(new_states), np.asarray(q_values), epochs=4, batch_size=len(q_values), verbose=1)
+		model.fit(np.asarray(new_states_possible), np.asarray(q_values), epochs=4, batch_size=len(q_values), verbose=1)
 		model.save('tic_tac_toe.h5')
 		del model
 		model = load_model('tic_tac_toe.h5')
 		print(xt/20, ot/20, dt/20)
 	else:
-		zipped = list(zip(states_2, q_values_2))
-		random.shuffle(zipped)
-		states_2, q_values_2 = zip(*zipped)
-		new_states = []
-		for state in states_2:
-			new_states.append(one_hot(state))
+		zip = list(zip(statenext, qval2))
+		random.shuffle(zip_)
+		statenext, qval2 = zip(*zip_)
+		new_states_possible = []
+		for state in statenext:
+			new_states_possible.append(ohencode(state))
 
-		# for i in range(0, len(states)):
-			# print(new_states[i], states[i], q_values[i])
-			# print(np.asarray(new_states))
+		# for i in range(0, len(states_possible)):
+			# print(new_states_possible[i], states_possible[i], q_values[i])
+			# print(np.asarray(new_states_possible))
 
-		model_2.fit(np.asarray(new_states), np.asarray(q_values_2), epochs=4, batch_size=len(q_values_2), verbose=1)
+		model_2.fit(np.asarray(new_states_possible), np.asarray(qval2), epochs=4, batch_size=len(qval2), verbose=1)
 		model_2.save('tic_tac_toe_2.h5')
 		del model_2
 		model_2 = load_model('tic_tac_toe_2.h5')
@@ -173,7 +167,7 @@ def process_games(games, model, model_2):
 
 
 
-mode = input('Choose a mode: (training/playing) ')
+mode = input('Choose a mode: (training/play_c) ')
 
 while True:
 	board = [0, 0, 0, 0,  0, 0, 0, 0, 0]
@@ -189,7 +183,7 @@ while True:
 		e_greedy = .7
 
 		for i in range(0, total_games):
-			playing = True
+			play_c = True
 			nn_turn = True
 			c = 0
 			board = [0, 0, 0, 0,  0, 0, 0, 0, 0]
@@ -198,7 +192,7 @@ while True:
 			current_game.append(board.copy())
 			nn_board = board
 
-			while playing:
+			while play_c:
 				if nn_turn:
 					if random.uniform(0, 1) <= e_greedy:
 						choosing = True
@@ -210,7 +204,7 @@ while True:
 								current_game.append(board.copy())
 								# save state to game array
 					else:
-						pre = model.predict(np.asarray([one_hot(board)]), batch_size=1)[0]
+						pre = model.predict(np.asarray([ohencode(board)]), batch_size=1)[0]
 						highest = -1000
 						num = -1
 						for j in range(0, 9):
@@ -234,7 +228,7 @@ while True:
 								current_game.append(board.copy())
 								# save state to game array
 					else:
-						pre = model_2.predict(np.asarray([one_hot(board)]), batch_size=1)[0]
+						pre = model_2.predict(np.asarray([ohencode(board)]), batch_size=1)[0]
 						highest = -1000
 						num = -1
 						for j in range(0, 9):
@@ -260,7 +254,7 @@ while True:
 				# print(get_outcome(board))
 
 				if not playable:
-					playing = False
+					play_c = False
 
 				nn_turn = not nn_turn
 
@@ -271,8 +265,8 @@ while True:
 			games.append(current_game)
 			# print('current game:', current_game)
 
-		process_games(games, model, model_2)
-	elif mode == 'playing':
+		trainers(games, model, model_2)
+	elif mode == 'play_c':
 		print('')
 		print('A new game is starting!')
 		print('')
@@ -286,9 +280,9 @@ while True:
 		while running:
 			if (x_turn and team == 'o') or (not x_turn and not team == 'o'):
 				if team == 'o':
-					pre = model.predict(np.asarray([one_hot(board)]), batch_size=1)[0]
+					pre = model.predict(np.asarray([ohencode(board)]), batch_size=1)[0]
 				elif team == 'x':
-					pre = model_2.predict(np.asarray([one_hot(board)]), batch_size=1)[0]
+					pre = model_2.predict(np.asarray([ohencode(board)]), batch_size=1)[0]
 				# print(pre)
 				print('')
 				highest = -1000

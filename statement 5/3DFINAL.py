@@ -36,7 +36,7 @@ class AIAgent(object):
         self.mark = mark
     def act(self,ava_actions,reward):
          """
-         convert reward to a linear array in the form of bcr
+     convert reward to a linear array in the form of bcr
          """
          l=np.zeros(27,dtype='uint8')
          o=0
