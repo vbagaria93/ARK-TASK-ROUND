@@ -9,17 +9,17 @@ from time import process_time
 capture=cv2.VideoCapture('demo1.mp4')
 t0=process_time()
 m=cv2.imread('gam.png')
-face_d=cv2.CascadeClassifier('haar_face2.xml')
 i=int(input('Enter the starting x coordinate of the ball: '))
 j=int(input('Enter the starting y coordinate of the ball : '))
 velox=int(input ('Enter velocity in x direction as an integer : '))
 veloy=int(input('Enter velocity in y direction as an integer : '))
+face_d=cv2.CascadeClassifier('haar_face2.xml')
 while True:
      ret,img=capture.read()
      height,width=img.shape[:2]
      gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
      img_tomask=np.zeros(img.shape[:2],dtype='uint8')
-     gray=cv2.flip(gray,1)
+     gray=cv2.flip(gray,1)#use only when feeding the video from webcam otherwise comment it out
      cv2.circle(img_tomask,(i,j),30,(235,206,135),thickness=cv2.FILLED)
      faces=face_d.detectMultiScale(gray,1.1,6,minSize=(20,20),flags=cv2.FONT_HERSHEY_SIMPLEX)
      for (x,y,w,h) in faces:

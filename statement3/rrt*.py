@@ -37,7 +37,6 @@ def get_line(x1, y1, x2, y2):
         if error < 0:
             y += ystep
             error += deltax
-    # Reverse the list if the coordinates were reversed
     if rev:
         points.reverse()
 
@@ -104,6 +103,20 @@ def pathp(nodelist,nodetracker,b,im):
      q=nodetracker[b]
      b=q
      return pathp(nodelist,nodetracker,b,im)
+def star(nodelist,nodetracker,c):#c initially would be the initial element
+    a=nodelist
+    b=a.pop(c)
+    if b[0]==140 and b[1]==400:
+        return nodelist,nodetracker
+    c1=nearest_node(a,b)
+    nodetracker[c]=nodelist.index(c1)
+    return star(nodelist,nodetracker,c+1)
 imaged=pathp(nodelist,nodetracker,-1,im)
 cv2.imshow('Path',imaged)
-cv2.waitKey(0) 
+cv2.waitKey(0)
+
+
+
+    
+    
+
