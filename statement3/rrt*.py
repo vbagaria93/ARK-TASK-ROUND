@@ -75,6 +75,14 @@ def next_find(img,node1,node2,steo=3):#node1 is the nearest node, node 2 is the 
             return next_find(img,node1,node2,i-1)
     q=a[steo]
     return q[1],q[0]
+def star(nodelist,nodetracker,c):#c initially would be the initial element
+    a=nodelist
+    b=a.pop(c)
+    if b[0]==140 and b[1]==400:
+        return nodelist,nodetracker
+    c1=nearest_node(a,b)
+    nodetracker[c]=nodelist.index(c1)
+    return star(nodelist,nodetracker,c+1)
 def planning(img,start,end,iter_len):
     nodelist=[start]
     nodetracker=[0]
@@ -89,6 +97,7 @@ def planning(img,start,end,iter_len):
          img[nextnode1[0],nextnode1[1]]=150
          nodelist.append(nextnode1)
          nodetracker.append(nodelist.index(nearnode))
+         nodelist,nodetracker=star(nodelist,nodetracker,0)
          if nextnode1[0] in range (140,155) and nextnode1[1] in range (400,441):
              nodelist.append(end)
              nodetracker.append(nodelist.index(nearnode))
@@ -103,14 +112,6 @@ def pathp(nodelist,nodetracker,b,im):
      q=nodetracker[b]
      b=q
      return pathp(nodelist,nodetracker,b,im)
-def star(nodelist,nodetracker,c):#c initially would be the initial element
-    a=nodelist
-    b=a.pop(c)
-    if b[0]==140 and b[1]==400:
-        return nodelist,nodetracker
-    c1=nearest_node(a,b)
-    nodetracker[c]=nodelist.index(c1)
-    return star(nodelist,nodetracker,c+1)
 imaged=pathp(nodelist,nodetracker,-1,im)
 cv2.imshow('Path',imaged)
 cv2.waitKey(0)
