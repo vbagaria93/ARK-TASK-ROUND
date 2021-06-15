@@ -508,7 +508,8 @@ class AIAgent(object):
          return self.mark+l
 def play():
     env = TicTacToeEnv()
-    print("\n\n\t*******   Welcome to the 3D version of our childhood favorite - TicTacToe  *******\n\t\t\t*******   AI gets to move first *******")
+    print("\n\n\t*******   Welcome to the 3D version of our childhood favorite - TicTacToe  *******\n\t\t\t*******   AI gets to move first ******\n\n Currently set to easy difficulty, difficulty can be incremented,decremented by increasing/ decreasing the weights respectively, to reduce the randomness/Increase the randomness of the AI move")
+    
     agents = [AIAgent('1'),HumanAgent('2')]
     episode = 0
     done = False

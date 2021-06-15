@@ -37,6 +37,7 @@ def get_line(x1, y1, x2, y2):
         if error < 0:
             y += ystep
             error += deltax
+    # Reverse the list if the coordinates were reversed
     if rev:
         points.reverse()
 
@@ -44,8 +45,6 @@ def get_line(x1, y1, x2, y2):
 def r_loc(img):
      x=random.randint(1,445)
      y=random.randint(1,159)
-     if  img[y,x]!=0 :
-         r_loc(img)
      return [y,x]
 def dist_between_nodes(node1,node2):    #manhattan distance and the angle with the x axis
      y=abs(node1[0]-node2[0])
@@ -66,7 +65,7 @@ def nearest_node(node_list,node):
 def next_find(img,node1,node2,steo=3):#node1 is the nearest node, node 2 is the random node
     a=get_line(node1[1],node1[0],node2[1],node2[0])
     if len(a)<=steo:
-         steo=len(a)-1
+         steo=len(a)-2
     if steo<2:
         return 0
     for i in range (0,steo):
@@ -75,14 +74,6 @@ def next_find(img,node1,node2,steo=3):#node1 is the nearest node, node 2 is the 
             return next_find(img,node1,node2,i-1)
     q=a[steo]
     return q[1],q[0]
-def star(nodelist,nodetracker,c):#c initially would be the initial element
-    a=nodelist
-    b=a.pop(c)
-    if b[0]==140 and b[1]==400 or c>len(nodelist)-2:
-        return nodelist,nodetracker
-    c1=nearest_node(a,b)
-    nodetracker[c]=nodelist.index(c1)
-    return star(nodelist,nodetracker,c+1)
 def planning(img,start,end,iter_len):
     nodelist=[start]
     nodetracker=[0]
@@ -97,17 +88,15 @@ def planning(img,start,end,iter_len):
          img[nextnode1[0],nextnode1[1]]=150
          nodelist.append(nextnode1)
          nodetracker.append(nodelist.index(nearnode))
-         nodelist,nodetracker=star(nodelist,nodetracker,0)
          if nextnode1[0] in range (140,155) and nextnode1[1] in range (400,441):
              nodelist.append(end)
              nodetracker.append(nodelist.index(nearnode))
              return nodelist,nodetracker,img
     return None,None,img
-nodelist,nodetracker,img=planning(img,start,end,500000)
+nodelist,nodetracker,img=planning(img,start,end,1000)
+cv2.imshow('path',img)
 def pathp(nodelist,nodetracker,b,im):
      a=nodelist[b]
-     if a==None:
-         return False
      if (a[0]==140 and a[1]==41):
          return im
      im[a[0],a[1]]=[0,255,255]
@@ -116,10 +105,4 @@ def pathp(nodelist,nodetracker,b,im):
      return pathp(nodelist,nodetracker,b,im)
 imaged=pathp(nodelist,nodetracker,-1,im)
 cv2.imshow('Path',imaged)
-cv2.waitKey(0)
-
-
-
-    
-    
-
+cv2.waitKey(0) 

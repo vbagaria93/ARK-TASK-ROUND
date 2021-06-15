@@ -4,10 +4,10 @@ class node1:
     def __init__(self,abscissa,ordinate):
         self.x=abscissa
         self.y=ordinate
-        self.d=float('inf') #distance from source
+        self.d=float('inf')
         self.parent_x=None
         self.parent_y=None
-        self.processed=False
+        self.computed=False
         self.ind__in_stack=None
 im=cv2.imread('MAZE_D.png')
 img = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
@@ -57,13 +57,13 @@ def get_livestack(mat,r,c):
     shape=mat.shape
     livestack=[]
     #ensure neighbors are within image boundaries
-    if r > 0 and not mat[r-1][c].processed:
+    if r > 0 and not mat[r-1][c].computed:
          livestack.append(mat[r-1][c])
-    if r < shape[0] - 1 and not mat[r+1][c].processed:
+    if r < shape[0] - 1 and not mat[r+1][c].computed:
             livestack.append(mat[r+1][c])
-    if c > 0 and not mat[r][c-1].processed:
+    if c > 0 and not mat[r][c-1].computed:
         livestack.append(mat[r][c-1])
-    if c < shape[1] - 1 and not mat[r][c+1].processed:
+    if c < shape[1] - 1 and not mat[r][c+1].computed:
             livestack.append(mat[r][c+1])
     return livestack
 def get_distance(img,u,v):#returns the eucldiean distance of the pixels, which if different indicate conflict
@@ -89,7 +89,7 @@ def next_node(img,src,dst):
     pq=transfer_up(pq, matrix[source_y][source_x].ind__in_stack)
     while len(pq):
         u=pq[0]
-        u.processed=True
+        u.computed=True
         pq[0]=pq[-1]
         pq[0].ind__in_stack=0
         pq.pop()

@@ -3,6 +3,11 @@ from cv2 import cv2 as cv2
 import math
 import random
 im=cv2.imread('MAZE_D.png')
+"""
+We can improve its efficiency a lot bu randomly choosing values in a given range like +-50 
+of the current node we are in,this would considerably reduce the time complexity of the program
+if time permits, ill surely try that,Ill only have to write a 10 line long function for that
+"""
 img=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 img[140:155, 3:41] = 0
 img[140:155, 400:441] = 0

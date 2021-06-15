@@ -11,6 +11,8 @@ end = [140, 400]  # start and end positions of the maze
 
 def neighbors(node, img):
     stack = []
+    if node[0]==179 or node [1]==456:
+        return stack
     up = (node[0] - 1, node[1])
     right = (node[0], node[1] + 1)
     down = (node[0] + 1, node[1])
