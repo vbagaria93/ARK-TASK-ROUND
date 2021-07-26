@@ -6,7 +6,7 @@ from time import process_time
 #   height=img.shape[0]*scale
 #   dimensions=(height,width)
 #   return cv2.resize(frame,dimensions,interpolation=cv2.INTER_CUBIC)
-capture=cv2.VideoCapture('demo1.mp4')
+capture=cv2.VideoCapture(02)
 t0=process_time()
 m=cv2.imread('gam.png')
 i=int(input('Enter the starting x coordinate of the ball: '))
